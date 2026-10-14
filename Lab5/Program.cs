@@ -1,6 +1,6 @@
-﻿// Lab 5
-// Student name:
-// Student number:
+// Lab 5
+// Student name:Manpreet Lalh
+// Student number:21247325
 
 using System;
 using System.Collections.Generic;
@@ -55,7 +55,7 @@ public static class GraphLibrary
         if (!graph.ContainsKey(start))
             throw new ArgumentException("start not in graph");
 
-        HashSet<string> visited = new();
+        /*HashSet<string> visited = new();
         Stack<string> work = new();
         work.Push(start);
 
@@ -67,8 +67,8 @@ public static class GraphLibrary
             foreach (string n in graph[v])
                 work.Push(n);
         }
-
-        return visited.Count == graph.Count;
+*/
+        return ReachableFrom(graph, start) == graph.Count;
     }
 
 
@@ -76,7 +76,29 @@ public static class GraphLibrary
         IReadOnlyDictionary<string, HashSet<string>> graph,
         string start)
     {
-        //TODO
+        if(!graph.ContainsKey(start)){
+            throw new ArgumentException("No start in the graph");
+        }
+
+        // is connected code and I want it to return what is connected has seen/"visited"
+      HashSet<string> visited = new();
+    Stack<string> work = new();
+
+work.Push(start);
+
+while (work.Count > 0)
+{
+    string v = work.Pop();
+    if (!visited.Add(v)) continue;
+
+    foreach (string n in graph[v])
+    {
+        work.Push(n);
+    }
+  
+}
+return(visited);
+
     }
 
 
@@ -84,16 +106,59 @@ public static class GraphLibrary
     public static int CountComponents(
         IReadOnlyDictionary<string, HashSet<string>> graph)
     {
-        //TODO
+    if(graph.Count == 0){
+        return 0; 
+    }
+    HashSet<string> globallyVisited = new();
+    int compCount = 0; 
+
+    foreach(string vertex in graph.Keys){
+        if (!globallyVisited.Contains(vertex)){
+
+            HashSet<string> component = ReachableFrom(graph, vertex);
+
+            foreach(string v in component){
+
+            globallyVisited.Add(v);
+            }
+
+            compCount++;
+        }
+    }
+    return compCount;
     }
 
 
     public static int ShortestDistance(
-        IReadOnlyDictionary<string, HashSet<string>> graph,
-        string start,
-        string target)
+        IReadOnlyDictionary<string, HashSet<string>> graph, string start, string target)
     {
-        //TODO
+        if(!graph.ContainsKey(start) || !graph.ContainsKey(target)){
+            throw new ArgumentException("Start and Target need to be in graph");
+        }
+        if (start == target){
+            return 0;
+        }
+        Queue<string> work = new();
+        Dictionary<string, int> distances = new();
+
+        work.Enqueue(start);
+        distances[start] = 0; 
+
+        while(work.Count > 0){
+string v = work.Dequeue();
+
+if (v == target){
+    return distances[v];
+
+}
+foreach(string n in graph[v]){
+    if(!distance.ContainsKey(n)){
+        distances[n] = distances[v] + 1; 
+        work.Enqueue(n);
+    }
+}
+        }
+        return -1; 
     }
 
 
